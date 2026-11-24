@@ -10,13 +10,19 @@ from app.seed import SEED_ROWS
 
 
 class Store:
+    # 辅助表承载领域明细（如字段迁移明细），不属于业务模块，
+    # 不计入 module_names/overview 的模块数与卡片统计。
+    AUXILIARY_TABLES = ("field_migration",)
+
     def __init__(self) -> None:
         self._tables: dict[str, list[dict[str, Any]]] = {
             name: [dict(row) for row in rows] for name, rows in SEED_ROWS.items()
         }
+        for name in self.AUXILIARY_TABLES:
+            self._tables[name] = []
 
     def module_names(self) -> list[str]:
-        return sorted(self._tables)
+        return sorted(name for name in self._tables if name not in self.AUXILIARY_TABLES)
 
     def rows(self, module: str) -> list[dict[str, Any]]:
         return self._tables.setdefault(module, [])

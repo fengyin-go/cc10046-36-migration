@@ -70,3 +70,10 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .analysis-chart { display: flex; align-items: flex-end; gap: 8px; height: 160px; padding: 12px 0; }
 .analysis-bar { flex: 1; border-radius: 4px 4px 0 0; background: var(--brand); min-width: 24px; position: relative; transition: height 0.4s; }
 .analysis-bar span { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--muted); white-space: nowrap; }
+/* 字段迁移：切换状态标签与有序字段展示 */
+.switch-tag { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; background: #eef1f5; color: #434d5c; white-space: nowrap; }
+.switch-tag[data-status='待核对'] { background: #fff3e0; color: #b26a00; }
+.switch-tag[data-status='已确认'] { background: #e6f4ea; color: #1e7e34; }
+.switch-tag[data-status='原生存序'] { background: #e8f0fe; color: #1a56c4; }
+.ordered-inline { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+.ordered-inline.pending { color: #b26a00; }

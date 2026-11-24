@@ -3,5 +3,8 @@ from __future__ import annotations
 
 from app.routers import resource
 from app.routers import chains
+from app.routers import export_ledger
 
-ROUTERS = [resource, chains]
+# export_ledger 的固定路径（ledger.csv、migration-details）必须先于
+# 通用资源路由注册，避免被 /api/{module}/{entry_id} 动态路径抢先匹配。
+ROUTERS = [export_ledger, resource, chains]

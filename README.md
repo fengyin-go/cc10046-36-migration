@@ -77,5 +77,23 @@ npm run dev
 - 列表接口统一返回 `{ items, total, page, size }`，动作接口统一返回 `{ ok, message }`。
 - 状态流转只允许在 `app/services` 里改，路由层不做业务判断。
 
+## 导出通道字段筛选迁移（逗号文本 → 保序字段记录）
+
+导出任务的「字段筛选」已从旧版逗号文本迁移为保序字段记录（`有序字段`），旧逗号文本列原样保留：
+
+- 新版部署后登记的任务（含交付链路 `/api/chains/delivery`）保存原字段次序，标记「原生存序」；
+- 上线时无法从文本认定次序的旧任务只登记字段迁移明细并标记「待核对」，**不自动按逗号拆分**；
+- 值班员按任务行补交清单确认后转为「已确认」，重复确认幂等，只生效一回、只写一条采集审计；
+- 采集审计按原任务行独立回查，每行含原字段文本、补交依据、确认后的有序字段。
+
+专用接口（见 `backend/app/routers/export_ledger.py`）：
+
+| 接口 | 说明 |
+| --- | --- |
+| `GET /api/export_channel/ledger.csv` | 新版导出任务台账，含字段次序明细与切换状态；纯下载不生成审核记录 |
+| `GET /api/export_channel/migration-details` | 字段迁移明细，支持 `switch_status` 筛选 |
+| `POST /api/export_channel/{task_id}/confirm-fields` | 按任务行确认有序字段（body：`ordered_fields`、`evidence`、`operator`） |
+| `GET /api/export_channel/export` | 旧版台账下载，列与单元格值保持原样不变 |
+
 领域：数据工程
 子方向：数据采集、爬虫与RPA
